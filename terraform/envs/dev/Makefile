@@ -1,6 +1,7 @@
 DEPLOYMENT_STAGE=dev
-TF_STATE_BUCKET=org-humancellatlas-upload-infra
+TF_STATE_BUCKET=org-humancellatlas-data-archive-upload-terraform
 S3_TFVARS_FILE=s3://$(TF_STATE_BUCKET)/terraform/envs/$(DEPLOYMENT_STAGE)/terraform.tfvars
+AWS_PROFILE=embl-ebi
 
 default: plan
 
@@ -17,10 +18,10 @@ destroy: state/rm
 	terraform destroy --backup=-
 
 retrieve-vars:
-	aws s3 cp $(S3_TFVARS_FILE) terraform.tfvars
+	aws --profile=$(AWS_PROFILE) s3 cp $(S3_TFVARS_FILE) terraform.tfvars
 
 upload-vars:
-	aws s3 cp terraform.tfvars $(S3_TFVARS_FILE)
+	aws --profile=$(AWS_PROFILE) s3 cp terraform.tfvars $(S3_TFVARS_FILE)
 
 import:
 	# These resources are shared between deployments in the same account
@@ -28,8 +29,8 @@ import:
 	- terraform import module.upload-service.aws_iam_role.AmazonEC2SpotFleetRole AmazonEC2SpotFleetRole
 	- terraform import module.upload-service.aws_iam_role.ecsInstanceRole ecsInstanceRole
 	- terraform import module.upload-service.aws_iam_instance_profile.ecsInstanceRole ecsInstanceRole
-	- terraform import module.upload-service.aws_iam_service_linked_role.AWSServiceRoleForEC2Spot arn:aws:iam::861229788715:role/aws-service-role/spot.amazonaws.com/AWSServiceRoleForEC2Spot
-	- terraform import module.upload-service.aws_iam_service_linked_role.AWSServiceRoleForEC2SpotFleet arn:aws:iam::861229788715:role/aws-service-role/spotfleet.amazonaws.com/AWSServiceRoleForEC2SpotFleet
+	- terraform import module.upload-service.aws_iam_service_linked_role.AWSServiceRoleForEC2Spot arn:aws:iam::871979166454:role/aws-service-role/spot.amazonaws.com/AWSServiceRoleForEC2Spot
+	- terraform import module.upload-service.aws_iam_service_linked_role.AWSServiceRoleForEC2SpotFleet arn:aws:iam::871979166454:role/aws-service-role/spot.amazonaws.com/AWSServiceRoleForEC2Spot
 
 state/rm:
 	# These resources are shared between deployments in the same account
