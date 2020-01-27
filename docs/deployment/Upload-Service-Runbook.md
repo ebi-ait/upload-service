@@ -4,7 +4,7 @@ Some of these link to other pages.  Some of them are links to headings below.
 
 * Deployment
   * [[How to Deploy the Upload Service]]
-  * [How to roll back a deployment](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/How%20to%20Deploy%20the%20Upload%20Service#rolling-back-a-deploy)
+  * [How to roll back a deployment](how-to-deploy-the-upload-service.md#rolling-back-a-deploy)
   * [Troubleshooting deployments](Upload-Service-Release-Playbook)
 * Operation
   * [Monitoring Upload Service Activity](#monitoring-upload-service-activity)
