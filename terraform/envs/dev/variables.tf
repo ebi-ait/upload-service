@@ -2,6 +2,10 @@ variable "deployment_stage" {
   type = "string"
 }
 
+variable "aws_profile" {
+  type = "string"
+}
+
 variable "slack_webhook" {
   type = "string"
 }
