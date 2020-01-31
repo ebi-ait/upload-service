@@ -3,6 +3,10 @@ SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ] ; do SOURCE="$(readlink "$SOURCE")"; done
 export PROJECT_ROOT="$(cd -P "$(dirname "$SOURCE")/.." && pwd)"
 
+if [ ! -d $1 ]; then
+  DEPLOYMENT_STAGE=$1
+fi
+
 set -a
 SERVICE_NAME='upload'
 AWS_DEFAULT_REGION='us-east-1'
