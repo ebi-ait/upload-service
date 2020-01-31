@@ -10,12 +10,13 @@
   },
   "dev": {
     "api_handler_name": "upload-api-dev",
-    "api_handler_arn": "",
-    "rest_api_id": "",
-    "region": "us-east-1",
-    "api_gateway_stage": "dev",
+    "api_handler_arn": "arn:aws:lambda:us-east-1:871979166454:function:upload-api-dev",
+    "lambda_functions": {},
     "backend": "api",
-    "chalice_version": "0.9.0"
+    "chalice_version": "1.1.1",
+    "rest_api_id": "mvocs9ms0j",
+    "api_gateway_stage": "dev",
+    "region": "us-east-1"
   },
   "staging": {
     "api_handler_name": "upload-api-staging",
