@@ -32,9 +32,44 @@ ensure that the correct AWS profile is chosen.
     deployment environment. Some environments may need specific fields that are not shared by all the other deployment 
     environments.
     
-    **Important**: Terraform variables are expected to contain secrets and sensitive data. The `terraform.tfvars`
+    In most cases, it's easy to just use any of the other previously set up config as reference, and change the values
+    slightly based on the deployment environment parameters being setup. Normally, the values only differ by some
+    prefix, suffix, etc.
+    
+    **Important**: Terraform variables are expected to contain secrets and sensitive data. The `terraform.tfvars` file
     should **not** be checked in to version control, and shared to a public repository. Normally, the version control
-    system should already be ignoring the file.
+    system should already be ignoring the file, so no further action is required.
     
     For a background on the configuration options in the `terraform.tfvars`, refer to 
     [the original setup wiki](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Deploying-the-Upload-Service-in-a-New-Project#decisions).
+    Of a particular note is the `upload_api_api_gateway_id` field which is only set much later in the process.
+    
+5. Define deployment secrets for the new environment.
+
+        echo "export INGEST_API_KEY=<generated-long-string>" > config/deployment_secrets.<deployment_stage>
+        
+    The `<generated-long-string>` must match the value of `ingest_api_key` in `terraform.tfvars`.
+    
+6. Set up required roles on AWS, and update the Makefile with the correct ARNs.
+
+    *Note*: this guide explicitly specifies the AWS profile for clarity. Alternatively, the `AWS_PROFILE` environment
+    variable can be set to the preferred AWS default profile so that the flag doesn't have to be specified every time.
+    
+    Upload Service deployment requires a few roles. At the time of writing these are:
+    * `ecsInstanceRole`
+    * `AWSBatchServiceRole`
+    * `AmazonEC2SpotFleetRole`
+    * `AWSServiceRoleForEC2Spot`
+    * `AWSServiceRoleForEC2SpotFleet`
+    
+    When deploying to an AWS account where another instance of the Upload Service was previously deployed successfully,
+    these roles most likely already exist. To address missing roles, refer to the 
+    [AWS Roles Guide](#aws_roles_guide).
+ 
+
+### Setting Up Missing AWS Roles
+<a name="aws_roles_guide"></a>
+
+1. AWS Batch Roles
+2. SpotFleetRole
+3. Service-linked Roles
