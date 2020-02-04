@@ -50,10 +50,7 @@ ensure that the correct AWS profile is chosen.
         
     The `<generated-long-string>` must match the value of `ingest_api_key` in `terraform.tfvars`.
     
-6. Set up required roles on AWS, and update the Makefile with the correct ARNs.
-
-    *Note*: this guide explicitly specifies the AWS profile for clarity. Alternatively, the `AWS_PROFILE` environment
-    variable can be set to the preferred AWS default profile so that the flag doesn't have to be specified every time.
+6. Set up required roles on AWS.
     
     Upload Service deployment requires a few roles. At the time of writing these are:
     * `ecsInstanceRole`
@@ -65,11 +62,35 @@ ensure that the correct AWS profile is chosen.
     When deploying to an AWS account where another instance of the Upload Service was previously deployed successfully,
     these roles most likely already exist. To address missing roles, refer to the 
     [AWS Roles Guide](#aws_roles_guide).
+    
+7. Confirm that the `Makefile` refers to the correct ARNs for the service-linked roles `AWSServiceRoleForEC2Spot` 
+and `AWSServiceRoleForEC2SpotFleet`. These are specified under the `import` target.
+
+    The ARNs are available through the AWS Console, navigating to IAM Roles list. Alternatively, the service roles can
+    be queried using the the AWS CLI:
+    
+        aws --profile=embl-ebi iam list-roles --path-prefix /aws-service-role/spot | jq -r '.Roles[].Arn'
+        
+    *Note*: this guide explicitly specifies the AWS profile for clarity. Alternatively, the `AWS_PROFILE` environment
+    variable can be set to the preferred AWS default profile so that the flag doesn't have to be specified every time.
  
 
 ### Setting Up Missing AWS Roles
 <a name="aws_roles_guide"></a>
 
 1. AWS Batch Roles
-2. SpotFleetRole
+    
+    The `ecsInstanceRole` and `AWSBatchServiceRole` roles are automatically created by AWS Batch when spinning up a new
+    AWS Batch instance. The quick way to set up these roles is to create a new Batch instance and deleting right after.
+    Go to the AWS Console, select Batch service, select Compute environments, and create a new environment. Once the
+    new environment is all set, it can be deleted.
+
+2. For the `AmazonEC2SpotFleetRole`, follow [the official guide](https://docs.aws.amazon.com/batch/latest/userguide/spot_fleet_IAM_role.html#spot-fleet-roles-console).
+
 3. Service-linked Roles
+    
+    `AWSServiceRoleForEC2Spot` and `AWSServiceRoleForEC2SpotFleet` are service linked roles that can be created through
+    the AWS CLI:
+    
+        aws iam create-service-linked-role --aws-service-name spot.amazonaws.com
+        aws iam create-service-linked-role --aws-service-name spotfleet.amazonaws.com
