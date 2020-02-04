@@ -1,6 +1,7 @@
 DEPLOYMENT_STAGE=staging
-TF_STATE_BUCKET=org-humancellatlas-upload-infra
+TF_STATE_BUCKET=org-humancellatlas-data-archive-upload-terraform
 S3_TFVARS_FILE=s3://$(TF_STATE_BUCKET)/terraform/envs/$(DEPLOYMENT_STAGE)/terraform.tfvars
+AWS_PROFILE=embl-ebi
 
 default: plan
 

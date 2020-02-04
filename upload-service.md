@@ -24,7 +24,13 @@ guides. At the time of writing, the `dev` directory is the most up-to-date.
 3. In `main.tf` of the target environment, configure the `terraform` block to correctly refer to the S3 backend. Also 
 ensure that the correct AWS profile is chosen.
 
-4. Define variables for the Terraform build. Copy `_template/terraform.tfvars.example` to `terraform.tfvars.example`:
+4. Create the S3 Bucket to be used by Terraform to store state. The name of the bucket must match the one specified in
+the `TF_STATE` variable of the corresponding `Makefile`. As this S3 Bucket will store sensitive data, it should be set
+with least allowable access privilege.
+
+    **Important**: Make sure that the `Makefile` variables are set to point to the correct S3 Bucket. 
+
+5. Define variables for the Terraform build. Copy `_template/terraform.tfvars.example` to `terraform.tfvars.example`:
 
         cp ../terraform.tfvars.example terraform.tfvars
     
@@ -42,15 +48,19 @@ ensure that the correct AWS profile is chosen.
     
     For a background on the configuration options in the `terraform.tfvars`, refer to 
     [the original setup wiki](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Deploying-the-Upload-Service-in-a-New-Project#decisions).
-    Of a particular note is the `upload_api_api_gateway_id` field which is only set much later in the process.
-    
-5. Define deployment secrets for the new environment.
+    Of a particular note is the `upload_api_api_gateway_id` field which is only set much later in the process. 
+
+6. Upload the variable files to the S3 Bucket.
+
+        make upload-vars
+   
+7. Define deployment secrets for the new environment.
 
         echo "export INGEST_API_KEY=<generated-long-string>" > config/deployment_secrets.<deployment_stage>
         
     The `<generated-long-string>` must match the value of `ingest_api_key` in `terraform.tfvars`.
     
-6. Set up required roles on AWS.
+8. Set up required roles on AWS.
     
     Upload Service deployment requires a few roles. At the time of writing these are:
     * `ecsInstanceRole`
@@ -63,7 +73,7 @@ ensure that the correct AWS profile is chosen.
     these roles most likely already exist. To address missing roles, refer to the 
     [AWS Roles Guide](#aws_roles_guide).
     
-7. Confirm that the `Makefile` refers to the correct ARNs for the service-linked roles `AWSServiceRoleForEC2Spot` 
+9. Confirm that the `Makefile` refers to the correct ARNs for the service-linked roles `AWSServiceRoleForEC2Spot` 
 and `AWSServiceRoleForEC2SpotFleet`. These are specified under the `import` target.
 
     The ARNs are available through the AWS Console, navigating to IAM Roles list. Alternatively, the service roles can
@@ -73,7 +83,11 @@ and `AWSServiceRoleForEC2SpotFleet`. These are specified under the `import` targ
         
     *Note*: this guide explicitly specifies the AWS profile for clarity. Alternatively, the `AWS_PROFILE` environment
     variable can be set to the preferred AWS default profile so that the flag doesn't have to be specified every time.
+    
+
+### Setting Up Infrastructure with Terraform
  
+When the configuration and setup are done, the changes can be applied to the AWS account.
 
 ### Setting Up Missing AWS Roles
 <a name="aws_roles_guide"></a>
