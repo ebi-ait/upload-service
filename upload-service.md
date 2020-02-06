@@ -177,3 +177,26 @@ For further information about testing, subsequent deployments, etc. refer to the
     
         aws iam create-service-linked-role --aws-service-name spot.amazonaws.com
         aws iam create-service-linked-role --aws-service-name spotfleet.amazonaws.com
+
+## Teardown
+
+For general instructions on tearing down resources created through Terraform, consult the 
+[original documentation](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Setting-up-New-Deployment-In-the-same-AWS-Account#teardown).
+Below are some additional notes.
+
+### Tearing Down S3 Buckets
+
+**Important**: This note is added here as a reference. Be sure that when forcing Terraform to delete any of the S3
+Buckets set up through it that all important data are backed up and safe. 
+
+By default non-empty S3 Buckets created through the deployment scripts are protected from teardown. The following 
+describes the steps to force Terraformto delete non-empty buckets.
+
+1. Update the S3 Bucket manifest; set `force_destroy` field to `"true"`.
+2. Apply configuration to the resource. For example:
+        
+        terraform apply --backup=- --target=aws_s3_bucket.lambda_deployments
+        
+3. Once the configuration change has been applied, Terraform will force delete the Bucket even if it's non-empty.
+
+        terraform destroy --backup=- --target=aws_s3_bucket.lambda_deployments
