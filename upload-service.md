@@ -87,7 +87,34 @@ and `AWSServiceRoleForEC2SpotFleet`. These are specified under the `import` targ
 
 ### Setting Up Infrastructure with Terraform
  
-When the configuration and setup are done, the changes can be applied to the AWS account.
+When the configuration and setup are done, the changes can be applied to the AWS account. This guide is based on 
+another set of [instructions for setting up the Upload Service](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Setting-up-New-Deployment-In-the-same-AWS-Account#terraform-part-i).
+
+1. Ensure that all environment variables are applied (refer to `config/environment` step above).
+
+2. Set `TERRAFORM_STATE_BUCKET` environment variable to the correct state S3 Bucket.
+
+        export `TERRAFORM_STATE_BUCKET=<s3_bucket_id>`
+
+3. Initialise Terraform.
+
+        make init
+        
+4. Pre-load data used in calculations.
+
+        terraform apply --backup=- --target=data.aws_availability_zones.available
+        
+5. Create the VPC.
+
+        terraform apply --backup=- --target=module.upload-service.module.upload-vpc.null_resource.vpc
+
+6. Create S3 Bucket, boot database server, and store database secrets.
+
+        terraform apply \ 
+            --backup=- \
+            --target=module.upload-service.aws_s3_bucket.lambda_deployments \
+            --target=module.upload-service.module.upload-service-database.aws_secretsmanager_secret_version.database-secrets
+        
 
 ### Setting Up Missing AWS Roles
 <a name="aws_roles_guide"></a>
