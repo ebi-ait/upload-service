@@ -11,7 +11,7 @@ set -a
 SERVICE_NAME='upload'
 AWS_DEFAULT_REGION='us-east-1'
 DCP_DNS_DOMAIN='archive.data.humancellatlas.org'
-BUCKET_NAME_PREFIX='org-humancellatlas-data-archive-upload-'
+BUCKET_NAME_PREFIX='org-hca-data-archive-upload-'
 DEPLOYMENT_STAGE="${DEPLOYMENT_STAGE:-dev}"
 UPLOAD_SERVICE_VERSION=`(git describe --tags --always)`
 API_HOST=${SERVICE_NAME}.${DEPLOYMENT_STAGE}.${DCP_DNS_DOMAIN}
