@@ -114,7 +114,29 @@ another set of [instructions for setting up the Upload Service](https://allspark
             --backup=- \
             --target=module.upload-service.aws_s3_bucket.lambda_deployments \
             --target=module.upload-service.module.upload-service-database.aws_secretsmanager_secret_version.database-secrets
+
+7. [Migrate the database](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Setting-up-New-Deployment-In-the-same-AWS-Account#migrate-the-database-create-tables).
+
+8. [Deploy the Upload Service API Lambda](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Setting-up-New-Deployment-In-the-same-AWS-Account#deploy-the-api-lambda).
+Make sure to copy the ID of the REST API just created to the `upload_api_api_gateway_id` in `terraform.tfvars`. Once the
+the field is set, copy the updated config to the S3 bucket using `make upload-vars` *in the correct directory*.
+
+9. In the `terraform/envs/<deployment_stage>` directory, import the Lambda and role to the Terraform state.
+
+        terraform import module.upload-service.aws_lambda_function.upload_api_lambda upload-api-$DEPLOYMENT_STAGE
+        terraform import module.upload-service.aws_iam_role.upload_api_lambda upload-api-$DEPLOYMENT_STAGE
         
+10. Import all the other IAM configuration to the Terraform state.
+
+        make import
+        
+    *Note*: importing state to Terraform is not an idempotent operation. When rerunning the import procedure, say after
+    an error, some of the previously imported state configuration can return with errors as they have already been 
+    imported. Normally, these errors can be ignored.
+    
+11. Finally, commit the changes to the AWS account.
+
+        make apply
 
 ### Setting Up Missing AWS Roles
 <a name="aws_roles_guide"></a>
