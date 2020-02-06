@@ -140,6 +140,24 @@ the field is set, copy the updated config to the S3 bucket using `make upload-va
 
         make apply
 
+### Further Steps
+
+The functional tests are configured with HCA defaults. To run the tests against a different deployment, a configuration
+file must be specified. Initially this config can contain something like the following:
+
+        {
+            "upload": {
+                "preprod_api_url_template": "https://upload.{deployment_stage}.archive.data.humancellatlas.org/v1"
+            }
+        }
+        
+Store this configuration somewhere accessible like `/path/to/config.json`, then run the functional tests.
+
+        HCA_CONFIG_FILE=/path/to/config.json make functional-tests
+
+For further information about testing, subsequent deployments, etc. refer to the 
+[original documentation](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Setting-up-New-Deployment-In-the-same-AWS-Account#testing).
+
 ### Setting Up Missing AWS Roles
 <a name="aws_roles_guide"></a>
 
