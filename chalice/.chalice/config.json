@@ -8,8 +8,11 @@
       "environment_variables": {}
     },
     "dev": {
-      "api_gateway_stage": "",
-      "environment_variables": {}
+      "api_gateway_stage": "dev",
+      "environment_variables": {
+        "DEPLOYMENT_STAGE": "dev",
+        "API_HOST": "upload.dev.archive.data.humancellatlas.org"
+      }
     },
     "integration": {
       "api_gateway_stage": "",

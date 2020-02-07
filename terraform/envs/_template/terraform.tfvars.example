@@ -1,4 +1,5 @@
 deployment_stage = "XXX"
+aws_profile = "YYYY"
 
 // VPC
 // Use the 10.24x.0.0 range, starting from prod and working backwards, i.e. prod=240, staging=241, integration=242 etc.
