@@ -56,8 +56,9 @@ As this S3 Bucket will store sensitive data, it should be set with least allowab
 
         make upload-vars
    
-7. Define deployment secrets for the new environment.
+7. Define deployment secrets for the new environment in `<project_root>/config`.
 
+        cd <project_root>
         echo "export INGEST_API_KEY=<generated-long-string>" > config/deployment_secrets.<deployment_stage>
         
     The `<generated-long-string>` must match the value of `ingest_api_key` in `terraform.tfvars`.
