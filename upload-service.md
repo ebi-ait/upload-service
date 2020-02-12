@@ -97,7 +97,7 @@ another set of [instructions for setting up the Upload Service](https://allspark
 
 2. Set `TERRAFORM_STATE_BUCKET` environment variable to the correct state S3 Bucket.
 
-        export `TERRAFORM_STATE_BUCKET=<s3_bucket_id>`
+        export TERRAFORM_STATE_BUCKET=<s3_bucket_id>
 
 3. Initialise Terraform.
 
