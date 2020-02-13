@@ -52,3 +52,5 @@ chalice/.chalice/venv/
 /config/deployment_secrets.integration
 /config/deployment_secrets.staging
 /config/deployment_secrets.prod
+
+.python-version
