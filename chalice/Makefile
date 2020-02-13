@@ -10,7 +10,7 @@ clobber: clean
 	git checkout .chalice/*.json
 
 build:
-	cp ../requirements.txt .
+	cp ./requirements-pinned.txt ./requirements.txt
 	mkdir -p chalicelib/upload/common chalicelib/upload/lambdas
 	cp -R ../upload/__init__.py \
 		  ../upload/common \
@@ -28,4 +28,3 @@ deploy: clean build
 	@echo -e "#########################################################\n"
 	./build_deploy_config.sh $(DEPLOYMENT_STAGE)
 	chalice deploy --no-autogen-policy --stage $(DEPLOYMENT_STAGE) --api-gateway-stage $(DEPLOYMENT_STAGE)
-
