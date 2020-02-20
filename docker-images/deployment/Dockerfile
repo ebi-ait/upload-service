@@ -9,7 +9,7 @@ RUN chmod +x /opt/aws_setup
 
 RUN yum update -y &&\
     amazon-linux-extras install -y python3 &&\
-    yum install -y git make which
+    yum install -y git make which zip
 
 # set up required utilities for building upload service
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &&\
