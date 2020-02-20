@@ -26,4 +26,4 @@ ENV DEPLOYMENT_STAGE=dev
 ENV AWS_PROFILE=default
 ENV AWS_DEFAULT_REGION=us-east-1
 
-CMD /opt/aws_setup && /bin/bash
+CMD /opt/aws_setup && tail -f /dev/null
