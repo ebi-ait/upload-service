@@ -21,6 +21,7 @@ RUN rm /usr/bin/python &&\
     pip install --user virtualenv
 
 VOLUME /aws/host:ro
+VOLUME /code
 
 ENV DEPLOYMENT_STAGE=dev
 ENV AWS_PROFILE=default
