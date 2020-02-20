@@ -16,15 +16,20 @@ def build_wheel(wheel_identifier, wheels_dir):
     print(f"Processing wheels for {wheel_identifier}")
     wd = os.path.join(wheels_dir, wheel_identifier)
     os.mkdir(wd)
-    subprocess.check_output(["pip", "download", wheel_identifier], cwd=wd)
+    o = subprocess.check_output(["pip", "download", '-q', wheel_identifier], cwd=wd)
     if glob.glob(os.path.join(wd, "*.tar.gz")):
         subprocess.check_output("pip wheel *.tar.gz && rm -f *.tar.gz", shell=True, cwd=wd)
     # The sub-dependency wheels downloaded and built here do not obey the pins set by pip freeze in the overall
     # requirements.txt. We only keep the top level wheel. Since requirements.txt contains the whole flattened dependency
     # graph, each missing sub-dependency wheel is handled at top level in the overall scan.
-    for wheel_filename in os.listdir(wd):
-        if wheel_filename.find(wheel_identifier.replace("-", "_").replace("==", "-")) != 0:
-            os.unlink(os.path.join(wd, wheel_filename))
+    wheel_file_names = os.listdir(wd)
+    for wheel_file_name in wheel_file_names:
+        file_name_prefix = wheel_identifier.replace("-", "_").replace("==", "-")
+        # Some modules end up with non-matching wheel names (e.g. markupsafe <-> MarkupSafe),
+        # so comparison should ignore case
+        matched = wheel_file_name.lower().find(file_name_prefix.lower()) == 0
+        if not matched:
+            os.unlink(os.path.join(wd, wheel_file_name))
     assert len(os.listdir(wd)) == 1, "Expected to find one wheel in {}, but found {}".format(wd, os.listdir(wd))
 
 # See https://github.com/aws/chalice/issues/497 for discussion

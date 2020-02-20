@@ -120,6 +120,7 @@ another set of [instructions for setting up the Upload Service](https://allspark
 
 7. [Migrate the database](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Setting-up-New-Deployment-In-the-same-AWS-Account#migrate-the-database-create-tables).
 
+<a name="deploying_services"></a>
 8. [Deploy the Upload Service API Lambda](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Setting-up-New-Deployment-In-the-same-AWS-Account#deploy-the-api-lambda).
 Make sure to copy the ID of the REST API just created to the `upload_api_api_gateway_id` in `terraform.tfvars`. Once the
 the field is set, copy the updated config to the S3 bucket using `make upload-vars` *in the correct directory*.
@@ -203,3 +204,72 @@ describes the steps to force Terraformto delete non-empty buckets.
 3. Once the configuration change has been applied, Terraform will force delete the Bucket even if it's non-empty.
 
         terraform destroy --backup=- --target=aws_s3_bucket.lambda_deployments
+        
+## Service Deployments
+
+### Deploying Lambda Functions
+
+To reliably create or update Lambda functions to AWS, it is recommended to deploy them from a GNU/Linux environment
+preferably one that resembles AWS Lambda environment. In past, unexpected errors were encountered when the services 
+were built and deployed through macOS.
+
+**Deployment through Docker**. Included in this code base is a Docker manifest that can be used to build an image for 
+building and deploying Upload Service functions. The image can be built locally either directly through the 
+`docker build` utility or through the `docker-compose` script. All related files can be found in 
+`docker-images/deployment` directory.
+   
+Using Docker's `build` command (any preferred tag can be used):
+
+    docker build -t humancellatlas/upload-service-deployment .
+    
+Using `docker-compose` script with the default `humancellatlas/upload-service-deployment` tag:
+
+    docker-compose build
+    
+Once the Docker image is ready, it can be run directly as a container through Docker or it a deployment service can be
+run in the background using the `docker-compose`.
+
+**Option A: Using `docker-compose`**. The Docker compose script is already configured with the required settings. All 
+that is needed is to ensure that environment variables `DEPLOYMENT_STAGE` (set through environment script) 
+and `AWS_PROFILE` be set.
+
+**Note**: deployment requires access to AWS credentials and the deployment image acquires this through the `/aws/host`
+volume. By default, the Docker compose script binds this to the host's `$HOME/.aws` directory. However, if preferred, 
+the binding can be set to any other directory as long as it resembles the AWS config directory.
+
+To run the deployment container in the background:
+
+    docker-compose up -d
+    
+To begin deploying, find the newly created container through `docker ps`; by default it will be named as something like
+`deployment_deployment_1`. Connect to this container using `exec` and run the shell.
+
+    docker exec -it deployment_deployment_1 /bin/bash
+        
+**Option B: Using Docker**. To use Docker directly, use `run` command with all the necessary bindings:
+
+    docker run -it --rm \
+            -v /path/to/repsitory:/code \
+            -v $HOME/.aws:/aws/host:ro \
+            -e DEPLOYMENT_STAGE=$DEPLOYMENT_STAGE \
+            -e AWS_PROFILE=default \
+            humancellatlas/upload-service-deployment /bin/bash
+            
+#### Deployment Guidelines
+
+Once inside the GNU/Linux deployment container, run the setup script from the `/code` directory:
+
+    ./scripts/setup_linux_container.sh
+    
+This will setup the tools required for deploying any of the Lambda functions.
+
+*Notes on package manager*: the deployment container uses a specific version of Amazon Linux 2 that uses `yum` as its
+package manager. `yum` breaks when using Python 3 as default Python version. To switch between Python 2 and 3, use the 
+custom `pyswitch` utility.
+
+Once the setup is done, the services can be [deployed as usual](#deploying_services). 
+
+## Recompiling Wheels
+
+*TODO*
+
