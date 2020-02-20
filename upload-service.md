@@ -24,9 +24,11 @@ guides. At the time of writing, the `dev` directory is the most up-to-date.
 3. In `main.tf` of the target environment, configure the `terraform` block to correctly refer to the S3 backend. Also 
 ensure that the correct AWS profile is chosen.
 
-4. Create the S3 Bucket to be used by Terraform to store state. The name of the bucket must match the one specified in
-the `TF_STATE` variable of the corresponding `Makefile`. As this S3 Bucket will store sensitive data, it should be set
-with least allowable access privilege.
+4. Create the S3 Bucket to be used by Terraform to store state. If deployments share the same Bucket, simply 
+refer to it.
+
+The name of the bucket must match the one specified in the `TF_STATE_BUCKET` variable of the corresponding `Makefile`. 
+As this S3 Bucket will store sensitive data, it should be set with least allowable access privilege.
 
     **Important**: Make sure that the `Makefile` variables are set to point to the correct S3 Bucket. 
 
@@ -54,8 +56,9 @@ with least allowable access privilege.
 
         make upload-vars
    
-7. Define deployment secrets for the new environment.
+7. Define deployment secrets for the new environment in `<project_root>/config`.
 
+        cd <project_root>
         echo "export INGEST_API_KEY=<generated-long-string>" > config/deployment_secrets.<deployment_stage>
         
     The `<generated-long-string>` must match the value of `ingest_api_key` in `terraform.tfvars`.
@@ -94,7 +97,7 @@ another set of [instructions for setting up the Upload Service](https://allspark
 
 2. Set `TERRAFORM_STATE_BUCKET` environment variable to the correct state S3 Bucket.
 
-        export `TERRAFORM_STATE_BUCKET=<s3_bucket_id>`
+        export TERRAFORM_STATE_BUCKET=<s3_bucket_id>
 
 3. Initialise Terraform.
 
