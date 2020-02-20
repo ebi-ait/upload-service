@@ -3,6 +3,10 @@ FROM amazonlinux:2.0.20191217.0
 COPY pyswitch /usr/bin/
 RUN chmod +x /usr/bin/pyswitch
 
+RUN mkdir -p /opt
+COPY aws_setup /opt/
+RUN chmod +x /opt/aws_setup
+
 RUN yum update -y &&\
     amazon-linux-extras install -y python3 &&\
     yum install -y git make which
@@ -16,10 +20,10 @@ RUN rm /usr/bin/python &&\
     pyswitch 3 &&\
     pip install --user virtualenv
 
-VOLUME /root/.aws:ro
+VOLUME /aws/host:ro
 
 ENV DEPLOYMENT_STAGE=dev
 ENV AWS_PROFILE=default
 ENV AWS_DEFAULT_REGION=us-east-1
 
-CMD /bin/bash
+CMD /opt/aws_setup && /bin/bash
