@@ -51,6 +51,8 @@ As this S3 Bucket will store sensitive data, it should be set with least allowab
     For a background on the configuration options in the `terraform.tfvars`, refer to 
     [the original setup wiki](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Deploying-the-Upload-Service-in-a-New-Project#decisions).
     Of a particular note is the `upload_api_api_gateway_id` field which is only set much later in the process. 
+    Another important field to set is the `gcp_service_acct_creds` that is required by the Upload Service to send 
+    messages to other DCP services.
 
 6. Upload the variable files to the S3 Bucket.
 
