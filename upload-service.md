@@ -120,8 +120,8 @@ another set of [instructions for setting up the Upload Service](https://allspark
 
 7. [Migrate the database](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Setting-up-New-Deployment-In-the-same-AWS-Account#migrate-the-database-create-tables).
 
-<a name="deploying_services"></a>
-8. [Deploy the Upload Service API Lambda](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Setting-up-New-Deployment-In-the-same-AWS-Account#deploy-the-api-lambda).
+8. <a name="deploying_services"></a> **Note**: do this inside the [deployment container](#deploying_lambda_functions). 
+[Deploy the Upload Service API Lambda](https://allspark.dev.data.humancellatlas.org/HumanCellAtlas/upload-service/wikis/Setting-up-New-Deployment-In-the-same-AWS-Account#deploy-the-api-lambda).
 Make sure to copy the ID of the REST API just created to the `upload_api_api_gateway_id` in `terraform.tfvars`. Once the
 the field is set, copy the updated config to the S3 bucket using `make upload-vars` *in the correct directory*.
 
@@ -196,7 +196,8 @@ Buckets set up through it that all important data are backed up and safe.
 By default non-empty S3 Buckets created through the deployment scripts are protected from teardown. The following 
 describes the steps to force Terraformto delete non-empty buckets.
 
-1. Update the S3 Bucket manifest; set `force_destroy` field to `"true"`.
+1. Update the S3 Bucket manifest; set `force_destroy` field to `"true"`. Use the `bucket.tf` file under the specific
+development environment directory.
 2. Apply configuration to the resource. For example:
         
         terraform apply --backup=- --target=aws_s3_bucket.lambda_deployments
@@ -208,6 +209,7 @@ describes the steps to force Terraformto delete non-empty buckets.
 ## Service Deployments
 
 ### Deploying Lambda Functions
+<a name="deploying_lambda_functions"></a>
 
 To reliably create or update Lambda functions to AWS, it is recommended to deploy them from a GNU/Linux environment
 preferably one that resembles AWS Lambda environment. In past, unexpected errors were encountered when the services 
