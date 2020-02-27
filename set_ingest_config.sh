@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
 
-# config
 
+# config
 filepath="$HOME/.config/hca/config.ingest.json"
 upload_service_url='https://upload.{deployment_stage}.archive.data.humancellatlas.org/v1'
 prod_upload_service_url='https://upload.archive.data.humancellatlas.org/v1'
 bucket_name_template='org-hca-data-archive-upload-{deployment_stage}'
-original='~/.config/hca/config.json'
+original="$HOME/.config/hca/config.json"
+backup="$HOME/.config/hca/config.json.bak"
 
 show_some_help() {
-    echo "This script will configure the HCA CLI to use the Ingest instance of the upload service"
+    echo "This script will configure the HCA CLI to use the Ingest instance of the upload service. Add -u flag to unset and use DEFAULT configuration"
+    echo "Usage: $0 [-h|-u]"
 }
 
 set_config() {
+    cp $original $backup
     touch $filepath
     echo "{
   \"upload\": {
@@ -25,16 +28,13 @@ set_config() {
 }
 " > $filepath
 
-    export HCA_CONFIG_FILE=$filepath
+    mv $filepath $original
 
     echo "HCA CLI is now configured to use the Ingest instance of the Upload Service"
 }
 
 unset_config(){
-    export HCA_CONFIG_FILE=$original
-    if [[ -f "$filepath" ]]; then
-      rm $filepath
-    fi
+    mv $backup $original
     echo "HCA CLI is now configured to use the DEFAULT configuration"
 }
 
