@@ -54,3 +54,5 @@ chalice/.chalice/venv/
 /config/deployment_secrets.prod
 
 .python-version
+venv/
+*.swp
