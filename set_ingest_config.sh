@@ -15,27 +15,37 @@ show_some_help() {
 }
 
 set_config() {
-    cp $original $backup
-    touch $filepath
-    echo "{
-  \"upload\": {
-    \"preprod_api_url_template\": \"$upload_service_url\",
-    \"current_area\": null,
-    \"bucket_name_template\": \"$bucket_name_template\",
-    \"upload_service_api_url_template\": \"$upload_service_url\",
-    \"production_api_url\": \"$prod_upload_service_url\"
-  }
-}
-" > $filepath
+    if [[ ! -f "$backup" ]]; then
+        cp $original $backup
 
-    mv $filepath $original
+        touch $filepath
+        echo "{
+      \"upload\": {
+        \"preprod_api_url_template\": \"$upload_service_url\",
+        \"current_area\": null,
+        \"bucket_name_template\": \"$bucket_name_template\",
+        \"upload_service_api_url_template\": \"$upload_service_url\",
+        \"production_api_url\": \"$prod_upload_service_url\"
+      }
+    }
+    " > $filepath
 
-    echo "HCA CLI is now configured to use the Ingest instance of the Upload Service"
+        mv $filepath $original
+
+        echo "HCA CLI is now configured to use the Ingest instance of the Upload Service"
+    else
+        echo "HCA CLI is already configured to use the Ingest instance of the Upload Service"
+    fi
 }
 
 unset_config(){
-    mv $backup $original
-    echo "HCA CLI is now configured to use the DEFAULT configuration"
+    if [[ -f "$backup" ]]; then
+        mv $backup $original
+        rm $backup
+        echo "HCA CLI is now configured to use the DEFAULT configuration"
+    else
+        echo "HCA CLI is already configured to use the DEFAULT configuration"
+    fi
 }
 
 has_u_option=false
