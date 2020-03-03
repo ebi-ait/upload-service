@@ -55,4 +55,5 @@ chalice/.chalice/venv/
 
 .python-version
 venv/
+venv*/
 *.swp
