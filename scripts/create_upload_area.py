@@ -9,8 +9,6 @@ import requests
 import uuid
 import os
 
-from pathlib import Path
-
 
 def main(args):
     credential_dir_path = "{0}/credentials".format(args.data_dir_path)
@@ -23,7 +21,7 @@ def main(args):
 
 def create_upload_area_and_fetch_credentials(args, dataset_dir_path):
     upload_area_id = 'aaaaaaaa-bbbb-cccc-dddd-' + str(uuid.uuid4()).split("-")[-1]
-    url = "https://upload.{0}.data.humancellatlas.org/v1/area/{1}".format(args.environment, upload_area_id)
+    url = "https://upload.{0}.archive.data.humancellatlas.org/v1/area/{1}".format(args.environment, upload_area_id)
     headers = {'Api-Key': args.api_key}
     response = requests.post(url, headers=headers)
     if response.status_code == 401:
@@ -37,15 +35,9 @@ def check_and_create_directories(args, credential_dir_path, credential_file_path
     if not os.path.isdir(args.data_dir_path):
         raise Exception("\nThe data directory path passed in does not exist. The default is '/data'. Please pass in a valid directory path or 'mkdir /data'\n")
         return
-    credential_dir_path = "{0}/credentials".format(args.data_dir_path)
-    credential_file_path = "{0}/upload_area_creds.txt".format(credential_dir_path)
     dataset_dir_path = "{0}/{1}".format(args.data_dir_path, args.dataset_name)
     try:
         os.mkdir(dataset_dir_path)
-        if not os.path.isdir(credential_dir_path):
-            os.mkdir(credential_dir_path)
-        if not os.path.exists(credential_file_path):
-            Path(credential_file_path).touch()
     except OSError as e:
         print("\n")
         print(e)
