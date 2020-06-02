@@ -140,6 +140,12 @@ EOF
 
 resource "aws_ecs_cluster" "pgbouncer" {
   name = "upload-service-pgbouncer-${var.deployment_stage}"
+  tags          = {
+    Name        = "upload-service"
+    Owner       = "tburdett"
+    Project     = "hca"
+    Service     = "ait"
+  }
 }
 
 resource "aws_ecs_service" "pgbouncer" {
@@ -183,6 +189,12 @@ resource "aws_lb" "main" {
   subnets         = ["${var.lb_subnet_ids}"]
   load_balancer_type = "network"
   internal           = false
+  tags          = {
+    Name        = "upload-pgbouncer"
+    Owner       = "tburdett"
+    Project     = "hca"
+    Service     = "ait"
+  }
 }
 
 resource "aws_lb_target_group" "pgbouncer" {

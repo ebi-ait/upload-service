@@ -83,7 +83,12 @@ resource "aws_lambda_function" "upload_health_check_lambda" {
   runtime          = "python3.6"
   memory_size      = 128
   timeout          = 300
-
+  tags             = {
+    Owner       = "tburdett"
+    Project     = "hca"
+    Service     = "ait"
+    environment = "${var.deployment_stage}"
+  }
   environment {
     variables = {
       DEPLOYMENT_STAGE = "${var.deployment_stage}",

@@ -118,3 +118,18 @@ data "aws_region" "current" {}
 data "aws_subnet_ids" "upload_vpc" {
   vpc_id = "${module.upload-vpc.vpc_id}"
 }
+
+// AWS RDS Cluster instance
+
+variable "aws_rds_cluster_instance_class" {
+  type = "string"
+}
+
+variable "aws_rds_cluster_instance_engine_version" {
+  type = "string"
+}
+
+variable "aws_rds_db_cluster_parameter_group_name" {
+  type = "string"
+}
+

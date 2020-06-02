@@ -131,10 +131,17 @@ resource "aws_lambda_function" "area_deletion_lambda" {
   runtime          = "python3.6"
   memory_size      = 500
   timeout          = 900
-
+  tags             = {
+    Owner       = "tburdett"
+    Project     = "hca"
+    Service     = "ait"
+    environment = "${var.deployment_stage}"
+  }
   environment {
     variables = {
       DEPLOYMENT_STAGE = "${var.deployment_stage}"
     }
   }
+
+
 }
