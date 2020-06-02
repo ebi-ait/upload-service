@@ -21,4 +21,8 @@ module "upload-service-database" {
   lb_subnet_ids = "${data.aws_subnet_ids.upload_vpc.ids}"
   vpc_id = "${module.upload-vpc.vpc_id}"
   preferred_maintenance_window = "${var.preferred_maintenance_window}"
+  // AWS RDS Cluster Instance
+  aws_rds_cluster_instance_class="${var.aws_rds_cluster_instance_class}"
+  aws_rds_cluster_instance_engine_version="${var.aws_rds_cluster_instance_engine_version}"
+  aws_rds_db_cluster_parameter_group_name="${var.aws_rds_db_cluster_parameter_group_name}"
 }

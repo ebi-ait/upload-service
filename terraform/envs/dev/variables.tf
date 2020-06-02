@@ -109,3 +109,18 @@ variable "dcp_auth0_audience" {
 variable "gcp_service_acct_creds" {
   type = "string"
 }
+
+// AWS RDS Cluster instance
+
+variable "aws_rds_cluster_instance_class" {
+  type = "string"
+}
+
+variable "aws_rds_cluster_instance_engine_version" {
+  type = "string"
+}
+
+variable "aws_rds_db_cluster_parameter_group_name" {
+  type = "string"
+}
+
