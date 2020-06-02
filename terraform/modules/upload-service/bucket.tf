@@ -3,6 +3,10 @@ resource "aws_s3_bucket" "upload_areas_bucket" {
   acl = "private"
   force_destroy = "false"
   acceleration_status = "Enabled"
+  tags = {
+    Project = "hca"
+  }
+
 }
 
 resource "aws_iam_policy" "upload_areas_submitter_access" {
@@ -85,4 +89,7 @@ resource "aws_s3_bucket" "lambda_deployments" {
   acl = "private"
   force_destroy = "false"
   acceleration_status = "Enabled"
+  tags = {
+    Project = "hca"
+  }
 }
