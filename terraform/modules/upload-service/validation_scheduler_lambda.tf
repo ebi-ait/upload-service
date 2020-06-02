@@ -135,7 +135,7 @@ resource "aws_lambda_function" "validation_scheduler_lambda" {
     Owner       = "tburdett"
     Project     = "hca"
     Service     = "ait"
-    environment  = "dev"
+    environment  = "${var.deployment_stage}"
   }
   environment {
     variables = {

@@ -120,6 +120,6 @@ resource "aws_lambda_function" "upload_api_lambda" {
     Owner       = "tburdett"
     Project     = "hca"
     Service     = "ait"
-    environment = "dev"
+    environment = "${var.deployment_stage}"
   }
 }
