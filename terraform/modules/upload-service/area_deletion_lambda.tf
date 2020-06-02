@@ -135,7 +135,7 @@ resource "aws_lambda_function" "area_deletion_lambda" {
     Owner       = "tburdett"
     Project     = "hca"
     Service     = "ait"
-    production  = "${var.deployment_stage}"
+    environment = "${var.deployment_stage}"
   }
   environment {
     variables = {
