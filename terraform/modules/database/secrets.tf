@@ -1,6 +1,11 @@
 
 resource "aws_secretsmanager_secret" "database-secrets" {
   name = "dcp/upload/${var.deployment_stage}/database"
+  tags          = {
+    Owner       = "tburdett"
+    Project     = "hca"
+    Service     = "ait"
+  }
 }
 
 resource "aws_secretsmanager_secret_version" "database-secrets" {
