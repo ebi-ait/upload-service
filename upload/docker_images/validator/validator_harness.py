@@ -20,7 +20,7 @@ logger = get_logger(f"CHECKSUMMER [{os.environ.get('AWS_BATCH_JOB_ID')}]")
 
 class ValidatorHarness:
     DEFAULT_STAGING_AREA = "/data"
-    TIMEOUT = 3600  # kill job after 1 hour
+    TIMEOUT = 14400  # kill job after 4 hours
 
     def __init__(self, path_to_validator, s3_urls_of_files_to_be_validated, staging_folder=None):
         self.path_to_validator = path_to_validator
