@@ -10,6 +10,7 @@ fi
 set -a
 SERVICE_NAME='upload'
 AWS_DEFAULT_REGION='us-east-1'
+AWS_PROFILE='embl-ebi'
 DCP_DNS_DOMAIN='archive.data.humancellatlas.org'
 BUCKET_NAME_PREFIX='org-hca-data-archive-upload-'
 DEPLOYMENT_STAGE="${DEPLOYMENT_STAGE:-dev}"
