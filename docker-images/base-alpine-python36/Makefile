@@ -1,4 +1,4 @@
-HUB_ORG=humancellatlas
+HUB_ORG=quay.io/ebi-ait
 IMAGE=upload-validator-base-alpine
 VERSION=$(shell cat VERSION)
 
