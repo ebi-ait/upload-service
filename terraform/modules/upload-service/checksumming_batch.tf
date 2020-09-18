@@ -1,5 +1,7 @@
 data "external" "checksum_desired_vcpus" {
-  program = ["python", "${path.module}/fetch_batch_vcpus.py"]
+  program = [
+    "python",
+    "${path.module}/fetch_batch_vcpus.py"]
 
   query = {
     compute_environment_name = "dcp-upload-csum-cluster-${var.deployment_stage}"
@@ -31,11 +33,21 @@ resource "aws_batch_compute_environment" "csum_compute_env" {
     ]
     ec2_key_pair = "${var.csum_cluster_ec2_key_pair}"
     instance_role = "${aws_iam_instance_profile.ecsInstanceRole.arn}"
-    // Do not appear to work.  They do not stick.
-    // tags {
-    //   Name = "dcp-upload-csum-${var.deployment_stage}"
-    // }
+
+    tags = {
+      Name = "dcp-upload-csum-${var.deployment_stage}"
+      Owner = "tburdett"
+      Project = "hca"
+      Service = "ait"
+      environment = "${var.deployment_stage}"
+    }
+
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
   depends_on = [
     "aws_iam_role_policy_attachment.AWSBatchServiceRole"
   ]
