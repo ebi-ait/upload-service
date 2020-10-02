@@ -34,14 +34,13 @@ resource "aws_batch_compute_environment" "csum_compute_env" {
     ec2_key_pair = "${var.csum_cluster_ec2_key_pair}"
     instance_role = "${aws_iam_instance_profile.ecsInstanceRole.arn}"
 
-    tags = {
-      Name = "dcp-upload-csum-${var.deployment_stage}"
-      Owner = "tburdett"
-      Project = "hca"
-      Service = "ait"
-      environment = "${var.deployment_stage}"
-    }
-
+    tags = "${merge(
+      var.default_tags,
+      map(
+        "Name","dcp-upload-csum-${var.deployment_stage}",
+        "Env","${var.deployment_stage}"
+      )
+    )}"
   }
 
   lifecycle {

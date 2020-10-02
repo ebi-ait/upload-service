@@ -3,12 +3,13 @@ resource "aws_s3_bucket" "upload_areas_bucket" {
   acl = "private"
   force_destroy = "false"
   acceleration_status = "Enabled"
-  tags = {
-    Owner = "tburdett"
-    Project = "hca"
-    Service = "ait"
-    environment = "${var.deployment_stage}"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name","upload",
+      "Env","${var.deployment_stage}"
+    )
+  )}"
 }
 
 resource "aws_iam_policy" "upload_areas_submitter_access" {
@@ -91,10 +92,11 @@ resource "aws_s3_bucket" "lambda_deployments" {
   acl = "private"
   force_destroy = "false"
   acceleration_status = "Enabled"
-  tags = {
-    Owner = "tburdett"
-    Project = "hca"
-    Service = "ait"
-    environment = "${var.deployment_stage}"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name","upload",
+      "Env","${var.deployment_stage}"
+    )
+  )}"
 }

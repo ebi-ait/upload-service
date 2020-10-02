@@ -23,3 +23,6 @@ output "vpc_default_security_group_id" {
   value = "${aws_vpc.vpc.default_security_group_id}"
 }
 
+variable "default_tags" {
+    type = "map"
+}

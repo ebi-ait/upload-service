@@ -124,3 +124,6 @@ variable "aws_rds_db_cluster_parameter_group_name" {
   type = "string"
 }
 
+variable "default_tags" {
+    type = "map"
+}

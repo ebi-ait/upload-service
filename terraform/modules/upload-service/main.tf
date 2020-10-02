@@ -9,6 +9,7 @@ module "upload-vpc" {
   component_name = "upload"
   deployment_stage = "${var.deployment_stage}"
   vpc_cidr_block = "${var.vpc_cidr_block}"
+  default_tags = "${var.default_tags}"
 }
 
 module "upload-service-database" {
@@ -25,4 +26,6 @@ module "upload-service-database" {
   aws_rds_cluster_instance_class="${var.aws_rds_cluster_instance_class}"
   aws_rds_cluster_instance_engine_version="${var.aws_rds_cluster_instance_engine_version}"
   aws_rds_db_cluster_parameter_group_name="${var.aws_rds_db_cluster_parameter_group_name}"
+
+  default_tags = "${var.default_tags}"
 }

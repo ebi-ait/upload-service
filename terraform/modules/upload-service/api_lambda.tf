@@ -115,11 +115,11 @@ resource "aws_lambda_function" "upload_api_lambda" {
       API_HOST = "${var.upload_api_fqdn}"
     }
   }
-  tags {
-    aws-chalice = "version=1.1.1:stage=${var.deployment_stage}:app=upload-api"
-    Owner       = "tburdett"
-    Project     = "hca"
-    Service     = "ait"
-    environment = "${var.deployment_stage}"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name", "upload",
+      "Env", "${var.deployment_stage}",
+      "aws-chalice", "version=1.1.1:stage=${var.deployment_stage}:app=upload-api"
+    ))}"
 }

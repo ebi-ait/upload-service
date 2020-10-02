@@ -96,11 +96,15 @@ resource "aws_subnet" "sn" {
   vpc_id            = "${aws_vpc.vpc.id}"
   map_public_ip_on_launch = true
 
-  tags = {
-    Name = "${var.component_name}-${var.deployment_stage}-${local.az_names[count.index]}"
-    component = "${var.component_name}"
-    deployment_stage = "${var.deployment_stage}"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name","${var.component_name}-${var.deployment_stage}-${local.az_names[count.index]}",
+      "Env","${var.deployment_stage}",
+      "component","${var.component_name}",
+      "deployment_stage","${var.deployment_stage}"
+    )
+  )}"
 }
 
 resource "aws_route_table_association" "a" {
@@ -127,9 +131,13 @@ resource "aws_default_security_group" "sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "${var.component_name}-${var.deployment_stage}-default"
-    component = "${var.component_name}"
-    deployment_stage = "${var.deployment_stage}"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name","${var.component_name}-${var.deployment_stage}-default",
+      "Env","${var.deployment_stage}",
+      "component","${var.component_name}",
+      "deployment_stage","${var.deployment_stage}"
+    )
+  )}"
 }
