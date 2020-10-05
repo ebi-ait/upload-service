@@ -35,22 +35,32 @@ resource "aws_vpc" "vpc" {
   enable_dns_support = true
   enable_dns_hostnames = true
 
-  tags = {
-    Name = "${var.component_name}-${var.deployment_stage}"
-    component = "${var.component_name}"
-    deployment_stage = "${var.deployment_stage}"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name","${var.component_name}-${var.deployment_stage}",
+      "Env","${var.deployment_stage}",
+      "component","${var.component_name}",
+      "deployment_stage","${var.deployment_stage}"
+    )
+  )}"
+
 }
 
 resource "aws_vpc_dhcp_options" "opts" {
   domain_name          = "ec2.internal"
   domain_name_servers  = ["AmazonProvidedDNS"]
 
-  tags = {
-    Name = "${var.component_name}-${var.deployment_stage}"
-    component = "${var.component_name}"
-    deployment_stage = "${var.deployment_stage}"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name","${var.component_name}-${var.deployment_stage}",
+      "Env","${var.deployment_stage}",
+      "component","${var.component_name}",
+      "deployment_stage","${var.deployment_stage}"
+    )
+  )}"
+
 }
 
 resource "aws_vpc_dhcp_options_association" "a" {
@@ -61,11 +71,16 @@ resource "aws_vpc_dhcp_options_association" "a" {
 resource "aws_internet_gateway" "igw" {
   vpc_id = "${aws_vpc.vpc.id}"
 
-  tags = {
-    Name = "${var.component_name}-${var.deployment_stage}"
-    component = "${var.component_name}"
-    deployment_stage = "${var.deployment_stage}"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name","${var.component_name}-${var.deployment_stage}",
+      "Env","${var.deployment_stage}",
+      "component","${var.component_name}",
+      "deployment_stage","${var.deployment_stage}"
+    )
+  )}"
+
 }
 
 resource "aws_route_table" "rt" {
@@ -76,11 +91,15 @@ resource "aws_route_table" "rt" {
     gateway_id = "${aws_internet_gateway.igw.id}"
   }
 
-  tags = {
-    Name = "${var.component_name}-${var.deployment_stage}"
-    component = "${var.component_name}"
-    deployment_stage = "${var.deployment_stage}"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name","${var.component_name}-${var.deployment_stage}",
+      "Env","${var.deployment_stage}",
+      "component","${var.component_name}",
+      "deployment_stage","${var.deployment_stage}"
+    )
+  )}"
 }
 
 resource "aws_main_route_table_association" "a" {
