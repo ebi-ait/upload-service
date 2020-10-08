@@ -113,12 +113,13 @@ resource "aws_lambda_function" "upload_checksum_lambda" {
   runtime          = "python3.6"
   memory_size      = 1500
   timeout          = 900
-  tags             = {
-    Owner       = "tburdett"
-    Project     = "hca"
-    Service     = "ait"
-    environment  = "${var.deployment_stage}"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Env","${var.deployment_stage}"
+    )
+  )}"
+
   environment {
     variables = {
       DEPLOYMENT_STAGE = "${var.deployment_stage}",

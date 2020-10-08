@@ -9,6 +9,13 @@ resource "aws_rds_cluster_instance" "cluster_instances" {
   auto_minor_version_upgrade = "true"
   performance_insights_enabled = "true"
   preferred_maintenance_window = "${var.preferred_maintenance_window}"
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name","upload",
+      "Env","${var.deployment_stage}"
+    )
+  )}"
 }
 
 resource "aws_rds_cluster" "upload" {
@@ -29,10 +36,11 @@ resource "aws_rds_cluster" "upload" {
   vpc_security_group_ids  = ["${aws_security_group.rds-postgres.id}"]
   db_subnet_group_name    = "${aws_db_subnet_group.db_subnet_group.name}"
   db_cluster_parameter_group_name = "${var.aws_rds_db_cluster_parameter_group_name}"
-  tags          = {
-    Name        = "upload"
-    Owner       = "tburdett"
-    Project     = "hca"
-    Service     = "ait"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name","upload",
+      "Env","${var.deployment_stage}"
+    )
+  )}"
 }

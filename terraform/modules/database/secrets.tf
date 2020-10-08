@@ -1,11 +1,13 @@
 
 resource "aws_secretsmanager_secret" "database-secrets" {
   name = "dcp/upload/${var.deployment_stage}/database"
-  tags          = {
-    Owner       = "tburdett"
-    Project     = "hca"
-    Service     = "ait"
-  }
+  tags = "${merge(
+    var.default_tags,
+    map(
+      "Name","DCP Upload ${var.deployment_stage} DB Subnet Group",
+      "Env","${var.deployment_stage}"
+    )
+  )}"
 }
 
 resource "aws_secretsmanager_secret_version" "database-secrets" {

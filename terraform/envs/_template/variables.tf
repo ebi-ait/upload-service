@@ -109,3 +109,7 @@ variable "dcp_auth0_audience" {
 variable "gcp_service_acct_creds" {
   type = "string"
 }
+
+variable "default_tags" {
+    type = "map"
+}

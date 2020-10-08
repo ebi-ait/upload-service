@@ -71,6 +71,8 @@ module "upload-service" {
   aws_rds_cluster_instance_class="${var.aws_rds_cluster_instance_class}"
   aws_rds_cluster_instance_engine_version="${var.aws_rds_cluster_instance_engine_version}"
   aws_rds_db_cluster_parameter_group_name="${var.aws_rds_db_cluster_parameter_group_name}"
+
+  default_tags = "${var.default_tags}"
 }
 
 output "upload_csum_lambda_role_arn" {
