@@ -42,7 +42,6 @@ resource "aws_batch_compute_environment" "validation_compute_env" {
         "Env", "${var.deployment_stage}"
       )
     )}"
-
   }
 
   lifecycle {
