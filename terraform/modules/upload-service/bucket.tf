@@ -3,6 +3,19 @@ resource "aws_s3_bucket" "upload_areas_bucket" {
   acl = "private"
   force_destroy = "false"
   acceleration_status = "Enabled"
+  lifecycle_rule {
+    enabled = true,
+    transition {
+      storage_class = "INTELLIGENT_TIERING"
+    }
+  }
+
+  lifecycle_rule {
+    enabled = true,
+    expiration {
+      days = 30
+    }
+  }
   tags = "${merge(
     var.default_tags,
     map(
